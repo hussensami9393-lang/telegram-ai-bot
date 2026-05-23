@@ -1,0 +1,32 @@
+# fly.toml - Fly.io Deployment Configuration
+# نشر على fly.io للتشغيل 24/7
+
+app = "ai-telegram-bot"
+primary_region = "dxb"  # Dubai - أقرب للمنطقة العربية
+
+[build]
+  dockerfile = "Dockerfile"
+
+[env]
+  APP_ENV = "production"
+
+[http_service]
+  internal_port = 8080
+  force_https = true
+  auto_stop_machines = false   # لا تتوقف أبداً
+  auto_start_machines = true
+  min_machines_running = 1     # دائماً آلة واحدة على الأقل
+
+  [http_service.concurrency]
+    type = "requests"
+    hard_limit = 200
+    soft_limit = 150
+
+[[vm]]
+  cpu_kind = "shared"
+  cpus = 1
+  memory_mb = 512             # كافي للبوت
+
+[mounts]
+  source = "bot_data"
+  destination = "/data"
